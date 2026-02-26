@@ -1,12 +1,12 @@
 const numeroWhats = "5583986066093";
 
 const dataInput = document.getElementById('data');
+const servicoSelect = document.getElementById('servico');
 const horariosDiv = document.getElementById('horarios');
 const form = document.getElementById('agendamentoForm');
 const mensagem = document.getElementById('mensagem');
 
-const hoje = new Date();
-dataInput.min = hoje.toISOString().split("T")[0];
+dataInput.min = new Date().toISOString().split("T")[0];
 
 const horariosDisponiveis = [
   "08:00","09:00","10:00","11:00","12:00",
@@ -24,14 +24,19 @@ function getAgendamentos() {
   return JSON.parse(localStorage.getItem("agendamentos")) || {};
 }
 
-function salvarAgendamento(data, hora) {
+function salvarAgendamento(data, servico, hora) {
   const agendamentos = getAgendamentos();
 
   if (!agendamentos[data]) {
-    agendamentos[data] = [];
+    agendamentos[data] = {};
   }
 
-  agendamentos[data].push(hora);
+  if (!agendamentos[data][servico]) {
+    agendamentos[data][servico] = [];
+  }
+
+  agendamentos[data][servico].push(hora);
+
   localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
 }
 
@@ -44,15 +49,20 @@ function criarBotoesHorarios() {
   horariosDiv.innerHTML = "";
   horarioSelecionado = "";
 
-  const dataSelecionada = dataInput.value;
+  const data = dataInput.value;
+  const servico = servicoSelect.value;
 
-  if (!dataSelecionada) {
-    horariosDiv.innerHTML = "<p>Selecione uma data primeiro.</p>";
+  if (!data || !servico) {
+    horariosDiv.innerHTML = "<p>Selecione data e serviço.</p>";
     return;
   }
 
   const agendamentos = getAgendamentos();
-  const horariosOcupados = agendamentos[dataSelecionada] || [];
+  const horariosOcupados =
+    agendamentos[data] &&
+    agendamentos[data][servico]
+      ? agendamentos[data][servico]
+      : [];
 
   horariosDisponiveis.forEach(hora => {
 
@@ -83,6 +93,7 @@ function criarBotoesHorarios() {
 }
 
 dataInput.addEventListener("change", criarBotoesHorarios);
+servicoSelect.addEventListener("change", criarBotoesHorarios);
 
 /* ===========================
    ENVIO
@@ -91,7 +102,7 @@ dataInput.addEventListener("change", criarBotoesHorarios);
 form.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const servico = document.getElementById("servico").value;
+  const servico = servicoSelect.value;
   const data = dataInput.value;
 
   if (!servico || !data || !horarioSelecionado) {
@@ -100,8 +111,7 @@ form.addEventListener("submit", function (e) {
     return;
   }
 
-  // Salva no localStorage
-  salvarAgendamento(data, horarioSelecionado);
+  salvarAgendamento(data, servico, horarioSelecionado);
 
   const texto = `Olá, gostaria de agendar o serviço: ${servico} na data ${data} às ${horarioSelecionado}.`;
   const url = `https://api.whatsapp.com/send?phone=${numeroWhats}&text=${encodeURIComponent(texto)}`;
