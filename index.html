@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Studio das Unhas | Cartão Digital Profissional</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="./style.css">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="./assets/Nails-icon.png">
+
+  <!-- Biblioteca QR Code -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+</head>
+
+<body class="dark">
+
+  <div class="card fade-up">
+
+    <!-- Botão alternar tema -->
+    <button id="themeToggle" class="theme-toggle" aria-label="Alternar tema">🌙</button>
+
+    <!-- Botão Compartilhar -->
+    <button id="shareBtn" class="share-btn">
+      <i class="fa-solid fa-share-nodes"></i>
+      Compartilhar
+    </button>
+
+    <!-- Perfil -->
+    <div class="logo">
+      <img src="./assets/nails-perfil.jfif" alt="Logo Nail Designer">
+    </div>
+
+    <h1>Studio das Unhas</h1>
+    <p class="subtitle">Nails Designer • Especialista em Unhas</p>
+    <p class="subtitle">banho de Gel • Alongamento • Pé e mão tradicional</p>
+
+    <!-- Botões de ação -->
+    <div class="buttons">
+
+      <a href="./agendamento.html" target="_blank" class="btn whatsapp-btn">
+        💅 Agende seu Horário
+      </a>
+
+      <a href="servicos.html" target="_blank" class="btn secondary">✨ Serviços</a>
+
+      <a href="tel:+5583986066093" class="btn secondary">📞 Ligar</a>
+      <a href="mailto:contato@nailsstudio.com" class="btn secondary">✉️ Enviar Email</a>
+
+    </div>
+
+    <!-- Redes sociais -->
+    <div id="social-links">
+      <a href="https://instagram.com/nome_do_studio" target="_blank" aria-label="Instagram">
+        <i class="fa-brands fa-instagram"></i>
+      </a>
+      <a href="https://maps.google.com" target="_blank" aria-label="Localização">
+        <i class="fa-solid fa-location-dot"></i>
+      </a>
+      <a href="https://api.whatsapp.com/send?phone=5512999999999&text=Olá,%20quero%20mais%20informações%20sobre%20os%20serviços."
+        target="_blank" aria-label="WhatsApp">
+        <i class="fa-brands fa-whatsapp"></i>
+      </a>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      © 2026 Studio das Unhas | Todos os direitos reservados
+    </footer>
+
+  </div>
+
+  <!-- Modal Compartilhar -->
+  <div id="shareModal" class="share-modal">
+    <div class="share-content">
+      <h3>Compartilhar Cartão</h3>
+
+      <!-- QR Code -->
+      <div class="qr-box">
+        <div id="qrcode"></div>
+        <img src="./assets/nails-perfil.jfif" class="qr-logo" alt="Logo">
+      </div>
+
+      <button id="copyLinkBtn" class="share-action">📋 Copiar link</button>
+      <button id="shareLinkBtn" class="share-action">🔗 Compartilhar</button>
+      <button id="closeShare" class="close-share">Fechar</button>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="./script.js"></script>
+
+</body>
+
+</html>

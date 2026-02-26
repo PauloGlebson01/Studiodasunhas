@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Agendamentos | Nome da Nails</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="agendamento.css">
+
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="./assets/Nails-icon.png">
+</head>
+
+<body class="dark">
+
+  <div class="container fade-up">
+
+    <h1>💅 Agende seu Horário</h1>
+    <p class="subtitle">
+      Escolha o serviço, data e horário <br>
+      e finalize pelo WhatsApp
+    </p>
+
+    <form id="agendamentoForm">
+
+      <!-- SERVIÇO -->
+      <label for="servico">Serviço</label>
+      <select id="servico" required>
+        
+        <option value="">Selecione um serviço</option>
+
+        <option value="Alongamento de Unhas">Alongamento de Unhas</option>
+
+        <option value="Decoração de Unhas">Decoração de Unhas</option>
+
+        <option value="Nail Art e Customizações">Nail Art e Customizações</option>
+
+        <option value="Unhas em Gel Premium">Unhas em Gel Premium</option>
+
+        <option value="Unhas em Gel Premium">Alongamento de cílios</option>
+      </select>
+
+      <!-- DATA -->
+      <label for="data">Data</label>
+      <input type="date" id="data" required>
+
+      <!-- HORÁRIOS -->
+      <label>Horários Disponíveis</label>
+      <div id="horarios" class="horarios"></div>
+
+      <!-- BOTÃO AGENDAR -->
+      <button type="submit" class="btn-agendar">
+        <i class="fa-brands fa-whatsapp"></i>
+        Agendar pelo WhatsApp
+      </button>
+
+    </form>
+
+    <div id="mensagem"></div>
+
+  </div>
+
+  <script src="agendamento.js"></script>
+</body>
+
+</html>

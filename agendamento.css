@@ -1,0 +1,101 @@
+body {
+  font-family: 'Poppins', sans-serif;
+  background: linear-gradient(135deg, #ffe6f0, #ffd6e8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  margin: 0;
+}
+
+.container {
+  background: #fff;
+  padding: 30px;
+  border-radius: 25px;
+  width: 90%;
+  max-width: 400px;
+  box-shadow: 0 10px 30px rgba(255, 46, 132, 0.4);
+  text-align: center;
+}
+
+h1 {
+  color: #ff2e84;
+  margin-bottom: 10px;
+  text-shadow: 1px 1px 5px rgba(255, 46, 132, 0.5);
+}
+
+p {
+  color: #555;
+  margin-bottom: 20px;
+}
+
+label {
+  display: block;
+  margin: 15px 0 5px 0;
+  font-weight: 600;
+  color: #ff2e84;
+}
+
+select,
+input[type="date"] {
+  width: 100%;
+  padding: 10px;
+  border-radius: 12px;
+  border: 1px solid #ff77b0;
+  margin-bottom: 15px;
+  font-size: 1rem;
+}
+
+button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(90deg, #ff77b0, #ff2e84);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.3s;
+}
+
+button[type="submit"]:hover {
+  background: linear-gradient(90deg, #ff2e84, #ff77b0);
+  box-shadow: 0 0 20px rgba(255, 46, 132, 0.6);
+}
+
+#mensagem {
+  margin-top: 20px;
+  font-weight: 600;
+}
+
+.horarios {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.horario-btn {
+  padding: 10px 15px;
+  border-radius: 12px;
+  border: none;
+  cursor: pointer;
+  background: linear-gradient(90deg, #ff77b0, #ff2e84);
+  color: #fff;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.horario-btn:hover {
+  background: linear-gradient(90deg, #ff2e84, #ff77b0);
+  box-shadow: 0 0 15px rgba(255, 46, 132, 0.6);
+}
+
+.horario-btn.selecionado {
+  background: gray;
+  color: #fff;
+  cursor: not-allowed;
+  box-shadow: none;
+}

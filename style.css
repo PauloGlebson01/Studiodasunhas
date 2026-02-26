@@ -1,0 +1,361 @@
+/* =========================
+   RESET
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* =========================
+   VARIÁVEIS (NAILS – PINK NEON)
+========================= */
+:root {
+  /* DARK MODE */
+  --dark-bg: #12060b;
+  --dark-card: #1a0f14;
+
+  /* LIGHT MODE */
+  --light-bg: #fff5f8;
+  --light-card: #ffffff;
+
+  /* BRAND */
+  --pink-neon: #ff2f92;
+  --pink-soft: #ff8cc6;
+  --gold: #d4af37;
+
+  --primary: linear-gradient(135deg, #ff2f92, #ff8cc6);
+
+  /* TEXT */
+  --text-dark: #2b0f1c;
+  --text-light: #ffffff;
+
+  --muted-dark: #ffb3d6;
+  --muted-light: #7a2b4b;
+}
+
+/* =========================
+   BODY / TEMAS
+========================= */
+body {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: background 0.35s ease, color 0.35s ease;
+}
+
+body.dark {
+  background: radial-gradient(circle at top, #3b0f24, #12060b);
+  color: var(--text-light);
+}
+
+body.light {
+  background: var(--light-bg);
+  color: var(--text-dark);
+}
+
+/* =========================
+   CARD
+========================= */
+.card {
+  position: relative;
+  width: 100%;
+  max-width: 420px;
+  padding: 32px 24px 28px;
+  border-radius: 30px;
+  text-align: center;
+  animation: fadeUp 0.45s ease;
+}
+
+body.dark .card {
+  background: linear-gradient(180deg, #1a0f14, #0d0609);
+}
+
+body.light .card {
+  background: var(--light-card);
+  box-shadow: 0 22px 45px rgba(0, 0, 0, 0.18);
+}
+
+/* =========================
+   BOTÃO TEMA
+========================= */
+.theme-toggle {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  background: var(--primary);
+  color: #fff;
+  cursor: pointer;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+  transition: transform 0.25s ease;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.15) rotate(10deg);
+}
+
+/* =========================
+   BOTÃO COMPARTILHAR
+========================= */
+.share-btn {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.share-btn:hover {
+  transform: scale(1.1);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+/* =========================
+   LOGO / FOTO
+========================= */
+.logo {
+  width: 112px;
+  height: 112px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  padding: 4px;
+  background: linear-gradient(135deg, var(--pink-neon), var(--gold));
+}
+
+.logo img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  background: #ffffff;
+}
+
+/* =========================
+   TEXTOS
+========================= */
+h1 {
+  font-size: 22px;
+  margin-bottom: 6px;
+  font-weight: 600;
+}
+
+.subtitle {
+  font-size: 13px;
+  line-height: 1.4;
+  margin-bottom: 14px;
+}
+
+body.dark .subtitle {
+  color: var(--muted-dark);
+}
+
+body.light .subtitle {
+  color: var(--muted-light);
+}
+
+/* =========================
+   BOTÕES
+========================= */
+.buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.btn {
+  padding: 12px;
+  border-radius: 18px;
+  text-decoration: none;
+  font-size: 13px;
+  background: var(--primary);
+  color: #fff;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.btn:hover {
+  transform: scale(1.06);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.3);
+}
+
+.btn.secondary {
+  background: transparent;
+  border: 1px solid var(--gold);
+  color: inherit;
+}
+
+/* =========================
+   REDES SOCIAIS
+========================= */
+#social-links {
+  margin-top: 16px;
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+}
+
+#social-links a {
+  font-size: 20px;
+  color: inherit;
+  transition: transform 0.25s ease, color 0.25s ease;
+}
+
+#social-links a:hover {
+  transform: scale(1.25);
+  color: var(--pink-neon);
+}
+
+/* =========================
+   FOOTER
+========================= */
+.footer {
+  margin-top: 18px;
+  font-size: 11px;
+  opacity: 0.75;
+}
+
+/* =========================
+   MODAL COMPARTILHAR
+========================= */
+.share-modal {
+  position: fixed;
+  inset: 0;
+  background: rgba(255, 245, 248, 0.9);
+  display: none;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  backdrop-filter: blur(6px);
+}
+
+/* 🔥 CLASSE QUE FAZ FUNCIONAR */
+.share-modal.active {
+  display: flex;
+}
+
+/* =========================
+   CONTEÚDO MODAL
+========================= */
+.share-content {
+  width: 100%;
+  max-width: 340px;
+  background: #1a0f14;
+  border-radius: 26px;
+  padding: 22px 18px;
+  text-align: center;
+  animation: scaleIn 0.3s ease;
+  color: #ffffff;
+}
+
+/* =========================
+   QR CODE
+========================= */
+.qr-box {
+  position: relative;
+  margin: 16px auto;
+  width: 200px;
+  height: 200px;
+  background: #ffffff;
+  border-radius: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.qr-logo {
+  position: absolute;
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: #ffffff;
+  padding: 4px;
+  border: 2px solid var(--gold);
+}
+
+/* =========================
+   BOTÕES MODAL
+========================= */
+.share-action {
+  width: 100%;
+  padding: 12px;
+  margin-top: 8px;
+  border-radius: 16px;
+  border: none;
+  background: var(--primary);
+  color: #ffffff;
+  cursor: pointer;
+  font-weight: 600;
+  transition: transform 0.25s ease;
+}
+
+.share-action:hover {
+  transform: scale(1.07);
+}
+
+.close-share {
+  background: none;
+  border: none;
+  margin-top: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  color: inherit;
+}
+
+/* =========================
+   ANIMAÇÕES
+========================= */
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    opacity: 0;
+    transform: scale(0.85);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+@media (max-width: 480px) {
+  .card {
+    padding: 28px 18px;
+  }
+
+  .btn,
+  .share-action {
+    font-size: 12px;
+    padding: 10px;
+  }
+}

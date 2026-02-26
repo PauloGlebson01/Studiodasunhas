@@ -1,0 +1,207 @@
+/* ======================== 
+   Página de Serviços – Nails
+   PADRÃO PINK NEON
+======================== */
+
+/* =========================
+   RESET
+========================= */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+}
+
+/* =========================
+   VARIÁVEIS (MESMO PADRÃO)
+========================= */
+:root {
+  --pink-neon: #ff2f92;
+  --pink-soft: #ff8cc6;
+  --gold: #d4af37;
+
+  --primary: linear-gradient(135deg, #ff2f92, #ff8cc6);
+
+  --bg-light: #fff5f8;
+  --text-dark: #2b0f1c;
+  --text-muted: #7a2b4b;
+
+  --shadow-pink: rgba(255, 47, 146, 0.35);
+}
+
+/* =========================
+   BODY
+========================= */
+body {
+  background: var(--bg-light);
+  color: var(--text-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+
+/* =========================
+   CONTAINER
+========================= */
+#container {
+  width: 360px;
+  min-height: 90vh;
+  background: url("./assets/unhas-gel-fundo.jpg") no-repeat center center;
+  background-size: cover;
+  border-radius: 20px;
+  box-shadow: 0 12px 30px var(--shadow-pink);
+  padding: 24px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+/* Overlay */
+#container::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    rgba(255, 245, 248, 0.75),
+    rgba(255, 140, 198, 0.4)
+  );
+  border-radius: 20px;
+  z-index: 0;
+}
+
+#container > * {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+}
+
+/* =========================
+   PERFIL
+========================= */
+#profile img {
+  width: 110px;
+  height: 110px;
+  border-radius: 50%;
+  border: 3px solid var(--pink-neon);
+  margin-bottom: 14px;
+  object-fit: cover;
+  box-shadow: 0 6px 18px var(--shadow-pink);
+}
+
+#profile h2 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  color: var(--pink-neon);
+  margin-bottom: 6px;
+}
+
+#profile p {
+  font-size: 0.95rem;
+  color: var(--text-muted);
+  margin-bottom: 26px;
+}
+
+/* =========================
+   TÍTULO SEÇÃO
+========================= */
+main h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--pink-neon);
+  margin-bottom: 20px;
+}
+
+/* =========================
+   LISTA DE SERVIÇOS
+========================= */
+main ul.menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+main ul.menu li {
+  background: rgba(255, 140, 198, 0.25);
+  padding: 14px 16px;
+  margin-bottom: 12px;
+  border-radius: 14px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  transition: all 0.3s ease;
+  border: 1px solid transparent;
+  color: var(--text-muted);
+}
+
+main ul.menu li i {
+  font-size: 1.2rem;
+  margin-right: 10px;
+  color: var(--pink-neon);
+}
+
+main ul.menu li:hover {
+  background: var(--primary);
+  color: #ffffff;
+  border-color: var(--pink-neon);
+  transform: translateY(-3px) scale(1.02);
+  box-shadow: 0 6px 18px var(--shadow-pink);
+}
+
+main ul.menu li:hover i {
+  color: #ffffff;
+}
+
+/* =========================
+   BOTÃO CTA
+========================= */
+main a {
+  display: inline-block;
+  margin-top: 22px;
+  padding: 12px 22px;
+  background: var(--primary);
+  color: #ffffff;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 18px var(--shadow-pink);
+}
+
+main a:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 8px 26px rgba(255, 47, 146, 0.55);
+}
+
+/* =========================
+   FOOTER
+========================= */
+footer {
+  margin-top: 30px;
+  font-size: 0.85rem;
+  color: var(--text-muted);
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+@media (max-width: 420px) {
+  #container {
+    padding: 18px;
+    width: 100%;
+  }
+
+  #profile img {
+    width: 90px;
+    height: 90px;
+  }
+
+  #profile h2 {
+    font-size: 1.2rem;
+  }
+}
