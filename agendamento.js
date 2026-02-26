@@ -8,8 +8,12 @@ import {
   getDocs
 } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
+/* ===========================
+   CONFIG FIREBASE
+=========================== */
+
 const firebaseConfig = {
-  apiKey: "AIzaSyCFds2JVBdd5R9z8coNhyUI7SwJyNXmX98",
+  apiKey: "SUA_API_KEY",
   authDomain: "studio-das-unhas.firebaseapp.com",
   projectId: "studio-das-unhas",
   storageBucket: "studio-das-unhas.firebasestorage.app",
@@ -20,8 +24,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
-const numeroWhats = "5583986066093";
+/* ===========================
+   ELEMENTOS
+=========================== */
 
+const nomeInput = document.getElementById('nome');
+const telefoneInput = document.getElementById('telefone');
 const dataInput = document.getElementById('data');
 const servicoSelect = document.getElementById('servico');
 const horariosDiv = document.getElementById('horarios');
@@ -39,7 +47,7 @@ const horariosDisponiveis = [
 let horarioSelecionado = "";
 
 /* ===========================
-   BUSCAR HORÁRIOS OCUPADOS FIREBASE
+   BUSCAR HORÁRIOS OCUPADOS
 =========================== */
 
 async function getHorariosOcupados(data, servico) {
@@ -61,7 +69,7 @@ async function getHorariosOcupados(data, servico) {
 }
 
 /* ===========================
-   CRIAR BOTÕES
+   CRIAR BOTÕES DE HORÁRIO
 =========================== */
 
 async function criarBotoesHorarios() {
@@ -103,7 +111,6 @@ async function criarBotoesHorarios() {
     });
 
     horariosDiv.appendChild(btn);
-
   });
 }
 
@@ -111,16 +118,18 @@ dataInput.addEventListener("change", criarBotoesHorarios);
 servicoSelect.addEventListener("change", criarBotoesHorarios);
 
 /* ===========================
-   ENVIO
+   ENVIO DO AGENDAMENTO
 =========================== */
 
 form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
+  const nome = nomeInput.value.trim();
+  const telefone = telefoneInput.value.trim();
   const servico = servicoSelect.value;
   const data = dataInput.value;
 
-  if (!servico || !data || !horarioSelecionado) {
+  if (!nome || !telefone || !servico || !data || !horarioSelecionado) {
     mensagem.innerHTML = "⚠️ Preencha todos os campos.";
     mensagem.style.color = "red";
     return;
@@ -129,22 +138,20 @@ form.addEventListener("submit", async function (e) {
   try {
 
     await addDoc(collection(db, "agendamentos"), {
+      nome,
+      telefone,
       servico,
       data,
       horario: horarioSelecionado,
+      status: "pendente",
       createdAt: new Date()
     });
 
-    const texto = `Olá, gostaria de agendar o serviço: ${servico} na data ${data} às ${horarioSelecionado}.`;
-
-    const url = `https://api.whatsapp.com/send?phone=${numeroWhats}&text=${encodeURIComponent(texto)}`;
-
-    window.open(url, "_blank");
-
-    mensagem.innerHTML = "✅ Horário reservado com sucesso!";
+    mensagem.innerHTML = "✅ Agendamento realizado com sucesso!";
     mensagem.style.color = "#ff2e84";
 
     form.reset();
+    horarioSelecionado = "";
     criarBotoesHorarios();
 
   } catch (error) {

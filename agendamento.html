@@ -28,21 +28,33 @@
 
     <form id="agendamentoForm">
 
+      <!-- NOME -->
+      <label for="nome">Seu Nome</label>
+      <input 
+        type="text" 
+        id="nome" 
+        placeholder="Digite seu nome completo"
+        required
+      >
+
+      <!-- TELEFONE -->
+      <label for="telefone">Telefone</label>
+      <input 
+        type="tel" 
+        id="telefone" 
+        placeholder="(83) 99999-9999"
+        required
+      >
+
       <!-- SERVIÇO -->
       <label for="servico">Serviço</label>
       <select id="servico" required>
-        
         <option value="">Selecione um serviço</option>
-
         <option value="Alongamento de Unhas">Alongamento de Unhas</option>
-
         <option value="Decoração de Unhas">Decoração de Unhas</option>
-
         <option value="Nail Art e Customizações">Nail Art e Customizações</option>
-
         <option value="Unhas em Gel Premium">Unhas em Gel Premium</option>
-
-        <option value="Unhas em Gel Premium">Alongamento de cílios</option>
+        <option value="Alongamento de Cílios">Alongamento de Cílios</option>
       </select>
 
       <!-- DATA -->
@@ -55,8 +67,8 @@
 
       <!-- BOTÃO AGENDAR -->
       <button type="submit" class="btn-agendar">
-        <i class="fa-brands fa-whatsapp"></i>
-        Agendar pelo WhatsApp
+        <i class="fa-brands"></i>
+      💅 Agendar Serviço
       </button>
 
     </form>
@@ -65,6 +77,8 @@
 
   </div>
 
-<script type="module" src="agendamento.js"></script></body>
+  <!-- SCRIPT -->
+  <script type="module" src="agendamento.js"></script>
 
+</body>
 </html>

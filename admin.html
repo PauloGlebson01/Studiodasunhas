@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <title>Painel Admin | Studio das Unhas</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="admin.css">
+
+    <link rel="icon" type="image/png" href="./assets/Nails-icon.png">
+</head>
+
+<body>
+
+    <!-- LOGIN -->
+    <div id="loginBox" class="login-box">
+
+        <!-- LOGO -->
+        <img src="./assets/nails-perfil.jfif" alt="Studio das Unhas" class="logo">
+
+        <h2>🔐 Acesso Administrativo</h2>
+        <input type="email" id="email" placeholder="E-mail">
+        <input type="password" id="senha" placeholder="Senha">
+        <button id="btnLogin">Entrar</button>
+        <p id="loginErro"></p>
+    </div>
+
+    <!-- PAINEL -->
+    <div class="container" id="painel" style="display:none;">
+
+        <!-- LOGO -->
+        <img src="./assets/nails-perfil.jfif" alt="Studio das Unhas" class="logo">
+
+        <h1>📋 Painel de Agendamentos</h1>
+        <h2>Studio das Unhas</h2>
+
+        <button id="logout" class="logout-btn">Sair</button>
+
+        <div id="lista"></div>
+
+    </div>
+
+    <script type="module" src="admin.js"></script>
+</body>
+
+</html>

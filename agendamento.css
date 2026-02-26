@@ -1,6 +1,10 @@
-/* =========================
+/* ========================= 
    RESET BÁSICO
 ========================= */
+* {
+  box-sizing: border-box;
+}
+
 body {
   font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #ffe6f0, #ffd6e8);
@@ -15,12 +19,12 @@ body {
    CARD PRINCIPAL
 ========================= */
 .container {
-  background: #fff;
-  padding: 30px;
+  background: #ffffff;
+  padding: 35px;
   border-radius: 25px;
   width: 90%;
-  max-width: 400px;
-  box-shadow: 0 10px 30px rgba(255, 46, 132, 0.4);
+  max-width: 420px;
+  box-shadow: 0 15px 40px rgba(255, 46, 132, 0.35);
   text-align: center;
   animation: fadeUp 0.5s ease;
 }
@@ -42,69 +46,48 @@ body {
 h1 {
   color: #ff2e84;
   margin-bottom: 10px;
-  text-shadow: 1px 1px 5px rgba(255, 46, 132, 0.5);
+  text-shadow: 1px 1px 5px rgba(255, 46, 132, 0.3);
 }
 
-p {
+.subtitle {
   color: #555;
-  margin-bottom: 20px;
+  margin-bottom: 25px;
+  font-size: 0.95rem;
 }
 
 label {
   display: block;
-  margin: 15px 0 5px 0;
+  margin: 15px 0 6px 0;
   font-weight: 600;
   color: #ff2e84;
+  text-align: left;
 }
 
 /* =========================
-   INPUTS
+   INPUTS E SELECT
 ========================= */
+input,
 select,
-input[type="date"] {
-  width: 100%;
-  padding: 10px;
-  border-radius: 12px;
-  border: 1px solid #ff77b0;
-  margin-bottom: 15px;
-  font-size: 1rem;
-  outline: none;
-  transition: 0.3s;
-}
-
-select:focus,
-input[type="date"]:focus {
-  border-color: #ff2e84;
-  box-shadow: 0 0 8px rgba(255, 46, 132, 0.3);
-}
-
-/* =========================
-   BOTÃO ENVIAR
-========================= */
-button[type="submit"] {
+textarea {
   width: 100%;
   padding: 12px;
-  background: linear-gradient(90deg, #ff77b0, #ff2e84);
-  color: #fff;
-  font-weight: 600;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: 0.3s;
+  border-radius: 14px;
+  border: 1px solid #ff77b0;
+  font-size: 0.95rem;
+  outline: none;
+  transition: 0.3s ease;
+  font-family: inherit;
 }
 
-button[type="submit"]:hover {
-  background: linear-gradient(90deg, #ff2e84, #ff77b0);
-  box-shadow: 0 0 20px rgba(255, 46, 132, 0.6);
+textarea {
+  resize: none;
 }
 
-/* =========================
-   MENSAGEM
-========================= */
-#mensagem {
-  margin-top: 20px;
-  font-weight: 600;
+input:focus,
+select:focus,
+textarea:focus {
+  border-color: #ff2e84;
+  box-shadow: 0 0 10px rgba(255, 46, 132, 0.3);
 }
 
 /* =========================
@@ -115,19 +98,20 @@ button[type="submit"]:hover {
   flex-wrap: wrap;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 15px;
+  margin: 15px 0 20px 0;
 }
 
 /* BOTÃO PADRÃO */
 .horario-btn {
-  padding: 10px 15px;
-  border-radius: 12px;
+  padding: 10px 14px;
+  border-radius: 14px;
   border: none;
   cursor: pointer;
   background: linear-gradient(90deg, #ff77b0, #ff2e84);
   color: #fff;
   font-weight: 600;
   transition: 0.3s ease;
+  min-width: 70px;
 }
 
 /* HOVER DISPONÍVEL */
@@ -138,22 +122,68 @@ button[type="submit"]:hover {
 
 /* SELECIONADO */
 .horario-btn.selecionado {
-  background: #6c757d !important; /* cinza escuro elegante */
+  background: #6c757d !important;
   color: #fff;
-  cursor: pointer;
   box-shadow: none;
 }
 
 /* INDISPONÍVEL */
 .horario-btn.indisponivel {
-  background: #d3d3d3 !important; /* cinza claro */
+  background: #d3d3d3 !important;
   color: #666;
   cursor: not-allowed;
   opacity: 0.7;
 }
 
-/* REMOVE HOVER DO INDISPONÍVEL */
 .horario-btn.indisponivel:hover {
   background: #d3d3d3;
   box-shadow: none;
+}
+
+/* =========================
+   BOTÃO ENVIAR
+========================= */
+.btn-agendar {
+  width: 100%;
+  padding: 14px;
+  margin-top: 10px;
+  background: linear-gradient(90deg, #ff77b0, #ff2e84);
+  color: #fff;
+  font-weight: 600;
+  border: none;
+  border-radius: 14px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: 0.3s ease;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+}
+
+.btn-agendar:hover {
+  background: linear-gradient(90deg, #ff2e84, #ff77b0);
+  box-shadow: 0 0 20px rgba(255, 46, 132, 0.6);
+}
+
+/* =========================
+   MENSAGEM
+========================= */
+#mensagem {
+  margin-top: 20px;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+/* =========================
+   RESPONSIVO
+========================= */
+@media (max-width: 480px) {
+  .container {
+    padding: 25px;
+  }
+
+  h1 {
+    font-size: 1.5rem;
+  }
 }

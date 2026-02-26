@@ -1,0 +1,186 @@
+/* =========================
+   RESET E PADRÃO GLOBAL
+========================= */
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #111;
+  color: #fff;
+  margin: 0;
+  padding: 20px;
+}
+
+/* =========================
+   CONTAINER PRINCIPAL
+========================= */
+.container {
+  max-width: 800px;
+  margin: auto;
+}
+
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* =========================
+   CARD DE AGENDAMENTOS
+========================= */
+.card {
+  background: #1e1e1e;
+  padding: 15px;
+  margin-bottom: 15px;
+  border-radius: 12px;
+  border-left: 5px solid #ff2e84;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: scale(1.02);
+}
+
+.card strong {
+  color: #ff2e84;
+}
+
+/* =========================
+   BOTÕES PADRÃO
+========================= */
+button {
+  border: none;
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hover geral */
+button:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+}
+
+/* Clique */
+button:active {
+  transform: translateY(0px) scale(0.97);
+  box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+}
+
+/* =========================
+   BOTÃO EXCLUIR (CARD)
+========================= */
+.card button {
+  margin-top: 10px;
+  background: linear-gradient(45deg, #ff2e2e, #cc0000);
+  color: white;
+}
+
+.card button:hover {
+  background: linear-gradient(45deg, #cc0000, #ff2e2e);
+  box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
+}
+
+/* =========================
+   BOTÃO LOGOUT
+========================= */
+#logout {
+  background: linear-gradient(45deg, #ff2e2e, #990000);
+  color: white;
+  padding: 8px 12px;
+  margin-bottom: 20px;
+}
+
+#logout:hover {
+  background: linear-gradient(45deg, #990000, #ff2e2e);
+  box-shadow: 0 8px 20px rgba(255, 0, 0, 0.4);
+}
+
+/* =========================
+   MENSAGEM VAZIA
+========================= */
+.vazio {
+  text-align: center;
+  margin-top: 40px;
+  color: #aaa;
+}
+
+/* =========================
+   LOGIN BOX
+========================= */
+.login-box {
+  max-width: 380px;
+  width: 100%;
+  margin: 80px auto;
+  background: #1e1e1e;
+  padding: 30px 25px;
+  border-radius: 15px;
+  text-align: center;
+  box-shadow: 0 15px 35px rgba(0,0,0,0.4);
+}
+
+.login-box h2 {
+  margin-bottom: 20px;
+}
+
+/* INPUTS AJUSTADOS */
+.login-box input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 15px;
+  border: 1px solid #333;
+  border-radius: 8px;
+  background: #2a2a2a;
+  color: #fff;
+  font-size: 14px;
+  transition: 0.3s ease;
+}
+
+.login-box input:focus {
+  border-color: #ff2e84;
+  outline: none;
+  box-shadow: 0 0 10px rgba(255, 46, 132, 0.3);
+}
+
+/* BOTÃO LOGIN */
+.login-box button {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(45deg, #ff2e84, #ff77b0);
+  border: none;
+  color: white;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.login-box button:hover {
+  background: linear-gradient(45deg, #ff77b0, #ff2e84);
+  box-shadow: 0 8px 20px rgba(255, 46, 132, 0.5);
+}
+
+/* =========================
+   LOGO CIRCULAR
+========================= */
+.logo {
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 50%;
+  display: block;
+  margin: 0 auto 15px auto;
+  border: 4px solid #ff2e84;
+  box-shadow: 0 8px 20px rgba(255, 46, 132, 0.4);
+  transition: 0.3s ease;
+}
+
+.logo:hover {
+  transform: scale(1.05);
+  box-shadow: 0 12px 25px rgba(255, 46, 132, 0.6);
+}
