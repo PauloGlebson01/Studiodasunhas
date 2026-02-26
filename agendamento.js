@@ -1,3 +1,25 @@
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import {
+  getFirestore,
+  collection,
+  addDoc,
+  query,
+  where,
+  getDocs
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyCFds2JVBdd5R9z8coNhyUI7SwJyNXmX98",
+  authDomain: "studio-das-unhas.firebaseapp.com",
+  projectId: "studio-das-unhas",
+  storageBucket: "studio-das-unhas.firebasestorage.app",
+  messagingSenderId: "898989262612",
+  appId: "1:898989262612:web:c644c5387cabd9a7b4a401"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 const numeroWhats = "5583986066093";
 
 const dataInput = document.getElementById('data');
@@ -17,34 +39,32 @@ const horariosDisponiveis = [
 let horarioSelecionado = "";
 
 /* ===========================
-   LOCAL STORAGE
+   BUSCAR HORÁRIOS OCUPADOS FIREBASE
 =========================== */
 
-function getAgendamentos() {
-  return JSON.parse(localStorage.getItem("agendamentos")) || {};
-}
+async function getHorariosOcupados(data, servico) {
 
-function salvarAgendamento(data, servico, hora) {
-  const agendamentos = getAgendamentos();
+  const q = query(
+    collection(db, "agendamentos"),
+    where("data", "==", data),
+    where("servico", "==", servico)
+  );
 
-  if (!agendamentos[data]) {
-    agendamentos[data] = {};
-  }
+  const querySnapshot = await getDocs(q);
 
-  if (!agendamentos[data][servico]) {
-    agendamentos[data][servico] = [];
-  }
+  const ocupados = [];
+  querySnapshot.forEach(doc => {
+    ocupados.push(doc.data().horario);
+  });
 
-  agendamentos[data][servico].push(hora);
-
-  localStorage.setItem("agendamentos", JSON.stringify(agendamentos));
+  return ocupados;
 }
 
 /* ===========================
    CRIAR BOTÕES
 =========================== */
 
-function criarBotoesHorarios() {
+async function criarBotoesHorarios() {
 
   horariosDiv.innerHTML = "";
   horarioSelecionado = "";
@@ -57,12 +77,7 @@ function criarBotoesHorarios() {
     return;
   }
 
-  const agendamentos = getAgendamentos();
-  const horariosOcupados =
-    agendamentos[data] &&
-    agendamentos[data][servico]
-      ? agendamentos[data][servico]
-      : [];
+  const horariosOcupados = await getHorariosOcupados(data, servico);
 
   horariosDisponiveis.forEach(hora => {
 
@@ -99,7 +114,7 @@ servicoSelect.addEventListener("change", criarBotoesHorarios);
    ENVIO
 =========================== */
 
-form.addEventListener("submit", function (e) {
+form.addEventListener("submit", async function (e) {
   e.preventDefault();
 
   const servico = servicoSelect.value;
@@ -111,16 +126,30 @@ form.addEventListener("submit", function (e) {
     return;
   }
 
-  salvarAgendamento(data, servico, horarioSelecionado);
+  try {
 
-  const texto = `Olá, gostaria de agendar o serviço: ${servico} na data ${data} às ${horarioSelecionado}.`;
-  const url = `https://api.whatsapp.com/send?phone=${numeroWhats}&text=${encodeURIComponent(texto)}`;
+    await addDoc(collection(db, "agendamentos"), {
+      servico,
+      data,
+      horario: horarioSelecionado,
+      createdAt: new Date()
+    });
 
-  window.open(url, "_blank");
+    const texto = `Olá, gostaria de agendar o serviço: ${servico} na data ${data} às ${horarioSelecionado}.`;
 
-  mensagem.innerHTML = "✅ Horário reservado com sucesso!";
-  mensagem.style.color = "#ff2e84";
+    const url = `https://api.whatsapp.com/send?phone=${numeroWhats}&text=${encodeURIComponent(texto)}`;
 
-  form.reset();
-  criarBotoesHorarios();
+    window.open(url, "_blank");
+
+    mensagem.innerHTML = "✅ Horário reservado com sucesso!";
+    mensagem.style.color = "#ff2e84";
+
+    form.reset();
+    criarBotoesHorarios();
+
+  } catch (error) {
+    console.error(error);
+    mensagem.innerHTML = "❌ Erro ao salvar agendamento.";
+    mensagem.style.color = "red";
+  }
 });
