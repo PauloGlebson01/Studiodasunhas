@@ -99,3 +99,9 @@ button[type="submit"]:hover {
   cursor: not-allowed;
   box-shadow: none;
 }
+
+.horario-btn.indisponivel {
+  background: #ccc;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
