@@ -3,47 +3,95 @@
 
 <head>
     <meta charset="UTF-8">
-
     <title>Painel Admin | Studio das Unhas</title>
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
     <link rel="stylesheet" href="admin.css">
-
     <link rel="icon" type="image/png" href="./assets/Nails-icon.png">
 </head>
 
 <body>
 
-    <!-- LOGIN -->
+    <!-- ================= LOGIN ================= -->
     <div id="loginBox" class="login-box">
 
         <!-- LOGO -->
         <img src="./assets/nails-perfil.jfif" alt="Studio das Unhas" class="logo">
 
         <h2>🔐 Acesso Administrativo</h2>
+
         <input type="email" id="email" placeholder="E-mail">
         <input type="password" id="senha" placeholder="Senha">
         <button id="btnLogin">Entrar</button>
-        <p id="loginErro"></p>
+
+        <p id="loginErro" class="erro"></p>
     </div>
 
-    <!-- PAINEL -->
+
+    <!-- ================= PAINEL ================= -->
     <div class="container" id="painel" style="display:none;">
 
-        <!-- LOGO -->
-        <img src="./assets/nails-perfil.jfif" alt="Studio das Unhas" class="logo">
+        <!-- TOPO -->
+        <div class="topo-painel">
 
-        <h1>📋 Painel de Agendamentos</h1>
-        <h2>Studio das Unhas</h2>
+            <div class="info-topo">
+                <img src="./assets/nails-perfil.jfif" alt="Studio das Unhas" class="logo">
+                <div>
+                    <h1>📋 Painel de Agendamentos</h1>
+                    <h2>Studio das Unhas</h2>
+                </div>
+            </div>
 
-        <button id="logout" class="logout-btn">Sair</button>
+            <button id="logout" class="logout-btn">Sair</button>
 
-        <div id="lista"></div>
+
+
+            <div class="filtro-periodo">
+                <label>📅 Período:</label>
+
+                <input type="date" id="dataInicio">
+                <span>até</span>
+                <input type="date" id="dataFim">
+
+                <button id="btnFiltrarPeriodo">Filtrar</button>
+                <button id="btnLimparPeriodo">Limpar</button>
+            </div>
+
+        </div>
+
+
+        <!-- 🔔 Área de Notificação Visual -->
+        <div id="notificacao" class="notificacao" style="display:none;">
+            🔔 Novo agendamento recebido!
+        </div>
+
+
+        <!-- ================= AGENDAMENTOS ================= -->
+
+        <!-- PENDENTES -->
+        <section class="bloco-status">
+            <h2 class="titulo pendente-titulo">🟡 Pendentes</h2>
+            <div id="pendentes" class="lista-status"></div>
+        </section>
+
+        <!-- CONFIRMADOS -->
+        <section class="bloco-status">
+            <h2 class="titulo confirmado-titulo">🟢 Confirmados</h2>
+            <div id="confirmados" class="lista-status"></div>
+        </section>
+
+        <!-- CANCELADOS -->
+        <section class="bloco-status">
+            <h2 class="titulo cancelado-titulo">🔴 Cancelados</h2>
+            <div id="cancelados" class="lista-status"></div>
+        </section>
 
     </div>
 
+
+    <!-- SCRIPT -->
     <script type="module" src="admin.js"></script>
+
 </body>
 
 </html>

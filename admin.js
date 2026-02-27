@@ -1,136 +1,221 @@
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
-
-import {
-  getFirestore,
-  collection,
-  onSnapshot,
-  deleteDoc,
-  doc,
-  updateDoc,
-  orderBy,
-  query
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
-
+// =============================
+// 🔥 IMPORTS FIREBASE
+// =============================
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
 import {
   getAuth,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut
-} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+import {
+  getFirestore,
+  collection,
+  onSnapshot,
+  updateDoc,
+  deleteDoc,
+  doc
+} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
 
+// =============================
+// 🔥 CONFIG
+// =============================
 const firebaseConfig = {
   apiKey: "AIzaSyCFds2JVBdd5R9z8coNhyUI7SwJyNXmX98",
   authDomain: "studio-das-unhas.firebaseapp.com",
   projectId: "studio-das-unhas",
-  storageBucket: "studio-das-unhas.firebasestorage.app",
+  storageBucket: "studio-das-unhas.appspot.com",
   messagingSenderId: "898989262612",
   appId: "1:898989262612:web:c644c5387cabd9a7b4a401"
 };
 
 const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 const auth = getAuth(app);
+const db = getFirestore(app);
 
-const lista = document.getElementById("lista");
+// =============================
+// 🎯 ELEMENTOS
+// =============================
 const loginBox = document.getElementById("loginBox");
 const painel = document.getElementById("painel");
-
-const emailInput = document.getElementById("email");
-const senhaInput = document.getElementById("senha");
 const btnLogin = document.getElementById("btnLogin");
 const logoutBtn = document.getElementById("logout");
-const loginErro = document.getElementById("loginErro");
+const erroLogin = document.getElementById("loginErro");
 
-/* ================= LOGIN ================= */
+const pendentesDiv = document.getElementById("pendentes");
+const confirmadosDiv = document.getElementById("confirmados");
+const canceladosDiv = document.getElementById("cancelados");
 
+const dataInicio = document.getElementById("dataInicio");
+const dataFim = document.getElementById("dataFim");
+const btnFiltrar = document.getElementById("btnFiltrarPeriodo");
+const btnLimpar = document.getElementById("btnLimparPeriodo");
+
+let unsubscribe = null;
+let agendamentosCache = [];
+let filtroAtivo = false;
+
+// =============================
+// 🔐 LOGIN
+// =============================
 btnLogin?.addEventListener("click", async () => {
+
+  const email = document.getElementById("email").value.trim();
+  const senha = document.getElementById("senha").value.trim();
+
+  if (!email || !senha) {
+    erroLogin.textContent = "Preencha email e senha.";
+    return;
+  }
+
   try {
-    await signInWithEmailAndPassword(
-      auth,
-      emailInput.value,
-      senhaInput.value
-    );
+    await signInWithEmailAndPassword(auth, email, senha);
+    erroLogin.textContent = "";
   } catch (error) {
-    loginErro.innerText = "E-mail ou senha inválidos.";
+    erroLogin.textContent = "Erro ao fazer login.";
   }
 });
 
+// =============================
+// 🔐 SESSÃO
+// =============================
+onAuthStateChanged(auth, (user) => {
+
+  if (user) {
+    loginBox.style.display = "none";
+    painel.style.display = "block";
+    iniciarListener();
+  } else {
+    loginBox.style.display = "block";
+    painel.style.display = "none";
+    if (unsubscribe) unsubscribe();
+  }
+
+});
+
+// =============================
+// 🚪 LOGOUT
+// =============================
 logoutBtn?.addEventListener("click", async () => {
   await signOut(auth);
 });
 
-onAuthStateChanged(auth, (user) => {
-  if (user) {
-    loginBox.style.display = "none";
-    painel.style.display = "block";
-    carregarAgendamentos();
-  } else {
-    loginBox.style.display = "block";
-    painel.style.display = "none";
-  }
+// =============================
+// 🔥 LISTENER
+// =============================
+function iniciarListener() {
+
+  if (unsubscribe) unsubscribe();
+
+  const ref = collection(db, "agendamentos");
+
+  unsubscribe = onSnapshot(ref, (snapshot) => {
+
+    agendamentosCache = snapshot.docs.map(docSnap => ({
+      id: docSnap.id,
+      ...docSnap.data()
+    }));
+
+    aplicarFiltro();
+
+  });
+
+}
+
+// =============================
+// 📅 FILTRO POR PERÍODO
+// =============================
+btnFiltrar?.addEventListener("click", () => {
+  filtroAtivo = true;
+  aplicarFiltro();
 });
 
-/* ================= AGENDAMENTOS ================= */
+btnLimpar?.addEventListener("click", () => {
+  dataInicio.value = "";
+  dataFim.value = "";
+  filtroAtivo = false;
+  renderizar(agendamentosCache);
+});
 
-function carregarAgendamentos() {
+function aplicarFiltro() {
 
-  const q = query(
-    collection(db, "agendamentos"),
-    orderBy("createdAt", "desc")
-  );
+  if (!filtroAtivo || !dataInicio.value || !dataFim.value) {
+    renderizar(agendamentosCache);
+    return;
+  }
 
-  onSnapshot(q, (snapshot) => {
+  const inicio = dataInicio.value;
+  const fim = dataFim.value;
 
-    lista.innerHTML = "";
+  const filtrados = agendamentosCache.filter(item => {
+    if (!item.data) return false;
+    return item.data >= inicio && item.data <= fim;
+  });
 
-    if (snapshot.empty) {
-      lista.innerHTML = "<p class='vazio'>Nenhum agendamento encontrado.</p>";
-      return;
-    }
+  renderizar(filtrados);
+}
 
-    snapshot.forEach((docSnap) => {
+// =============================
+// 🎨 RENDERIZAÇÃO
+// =============================
+function renderizar(lista) {
 
-      const dados = docSnap.data();
-      const id = docSnap.id;
+  pendentesDiv.innerHTML = "";
+  confirmadosDiv.innerHTML = "";
+  canceladosDiv.innerHTML = "";
+
+  if (!lista.length) {
+    pendentesDiv.innerHTML = "<p>Nenhum agendamento encontrado.</p>";
+    return;
+  }
+
+  lista
+    .sort((a, b) => (a.data || "").localeCompare(b.data || ""))
+    .forEach(dados => {
 
       const div = document.createElement("div");
-      div.classList.add("card");
+      div.className = "card";
 
-div.innerHTML = `
-  <strong>👤 Cliente:</strong> ${dados.nome || "Não informado"}<br>
-  <strong>📞 Contato:</strong> ${dados.contato || "Não informado"}<br><br>
+      div.innerHTML = `
+        <strong>Cliente:</strong> ${dados.nome ?? "-"}<br>
+        <strong>Contato:</strong> ${dados.contato ?? "-"}<br>
+        <strong>Serviço:</strong> ${dados.servico ?? "-"}<br>
+        <strong>Data:</strong> ${dados.data ?? "-"}<br>
+        <strong>Horário:</strong> ${dados.horario ?? "-"}<br>
+        <strong>Status:</strong> ${dados.status ?? "pendente"}<br><br>
 
-  <strong>💅 Serviço:</strong> ${dados.servico}<br>
-  <strong>📅 Data:</strong> ${dados.data}<br>
-  <strong>⏰ Horário:</strong> ${dados.horario}<br>
-  <strong>Status:</strong> 
-  <span class="${dados.status}">${dados.status}</span>
-  <br><br>
+        <button class="confirmar">Confirmar</button>
+        <button class="cancelar">Cancelar</button>
+        <button class="excluir">Excluir</button>
+      `;
 
-  <button class="confirmar">Confirmar</button>
-  <button class="cancelar">Cancelar</button>
-  <button class="excluir">Excluir</button>
-`;
-
-      div.querySelector(".confirmar").onclick = async () => {
-        await updateDoc(doc(db, "agendamentos", id), {
+      div.querySelector(".confirmar").addEventListener("click", async () => {
+        await updateDoc(doc(db, "agendamentos", dados.id), {
           status: "confirmado"
         });
-      };
+      });
 
-      div.querySelector(".cancelar").onclick = async () => {
-        await updateDoc(doc(db, "agendamentos", id), {
+      div.querySelector(".cancelar").addEventListener("click", async () => {
+        await updateDoc(doc(db, "agendamentos", dados.id), {
           status: "cancelado"
         });
-      };
+      });
 
-      div.querySelector(".excluir").onclick = async () => {
+      div.querySelector(".excluir").addEventListener("click", async () => {
         if (confirm("Deseja excluir este agendamento?")) {
-          await deleteDoc(doc(db, "agendamentos", id));
+          await deleteDoc(doc(db, "agendamentos", dados.id));
         }
-      };
+      });
 
-      lista.appendChild(div);
+      const status = dados.status || "pendente";
+
+      if (status === "confirmado") {
+        confirmadosDiv.appendChild(div);
+      } else if (status === "cancelado") {
+        canceladosDiv.appendChild(div);
+      } else {
+        pendentesDiv.appendChild(div);
+      }
+
     });
-  });
 }

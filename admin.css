@@ -184,3 +184,34 @@ button:active {
   transform: scale(1.05);
   box-shadow: 0 12px 25px rgba(255, 46, 132, 0.6);
 }
+
+.titulo-mes {
+  margin-top: 30px;
+  color: #ff2e84;
+  border-bottom: 1px solid #333;
+  padding-bottom: 5px;
+}
+
+.titulo-data {
+  margin-top: 15px;
+  color: #aaa;
+}
+
+.filtro-periodo {
+  margin: 20px 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  align-items: center;
+}
+
+.filtro-periodo input {
+  padding: 6px;
+  border-radius: 6px;
+  border: none;
+}
+
+.filtro-periodo button {
+  background: linear-gradient(45deg, #ff2e84, #ff77b0);
+  color: white;
+}
