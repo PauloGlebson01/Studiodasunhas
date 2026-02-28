@@ -15,7 +15,6 @@
     <!-- ================= LOGIN ================= -->
     <div id="loginBox" class="login-box">
 
-        <!-- LOGO -->
         <img src="./assets/nails-perfil.jfif" alt="Studio das Unhas" class="logo">
 
         <h2>🔐 Acesso Administrativo</h2>
@@ -31,7 +30,7 @@
     <!-- ================= PAINEL ================= -->
     <div class="container" id="painel" style="display:none;">
 
-        <!-- TOPO -->
+        <!-- ================= TOPO ================= -->
         <div class="topo-painel">
 
             <div class="info-topo">
@@ -42,25 +41,36 @@
                 </div>
             </div>
 
-            <button id="logout" class="logout-btn">Sair</button>
+            <!-- Indicadores -->
+            <div class="indicadores">
+                <div class="badge">
+                    🟡 Pendentes:
+                    <span id="contadorPendentes">0</span>
+                </div>
+            </div>
 
-
-
-            <div class="filtro-periodo">
-                <label>📅 Período:</label>
-
-                <input type="date" id="dataInicio">
-                <span>até</span>
-                <input type="date" id="dataFim">
-
-                <button id="btnFiltrarPeriodo">Filtrar</button>
-                <button id="btnLimparPeriodo">Limpar</button>
+            <!-- Ações -->
+            <div class="acoes-topo">
+                <button id="exportExcel" class="btn-acao">📊 Exportar Excel</button>
+                <button id="exportPDF" class="btn-acao">🗂 Exportar PDF</button>
+                <button id="logout" class="logout-btn">Sair</button>
             </div>
 
         </div>
 
+        <!-- ================= FILTRO ================= -->
+        <div class="filtro-periodo">
+            <label>📅 Filtrar por período:</label>
 
-        <!-- 🔔 Área de Notificação Visual -->
+            <input type="date" id="dataInicio">
+            <span>até</span>
+            <input type="date" id="dataFim">
+
+            <button id="btnFiltrarPeriodo">Filtrar</button>
+            <button id="btnLimparPeriodo">Limpar</button>
+        </div>
+
+        <!-- 🔔 NOTIFICAÇÃO -->
         <div id="notificacao" class="notificacao" style="display:none;">
             🔔 Novo agendamento recebido!
         </div>
@@ -87,7 +97,6 @@
         </section>
 
     </div>
-
 
     <!-- SCRIPT -->
     <script type="module" src="admin.js"></script>

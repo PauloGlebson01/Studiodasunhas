@@ -1,13 +1,13 @@
 // =============================
 // 🔥 IMPORTS FIREBASE
 // =============================
-import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
 import {
   getAuth,
   signInWithEmailAndPassword,
   onAuthStateChanged,
   signOut
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
 import {
   getFirestore,
   collection,
@@ -15,7 +15,7 @@ import {
   updateDoc,
   deleteDoc,
   doc
-} from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+} from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
 // =============================
 // 🔥 CONFIG
@@ -46,20 +46,20 @@ const pendentesDiv = document.getElementById("pendentes");
 const confirmadosDiv = document.getElementById("confirmados");
 const canceladosDiv = document.getElementById("cancelados");
 
-const dataInicio = document.getElementById("dataInicio");
-const dataFim = document.getElementById("dataFim");
-const btnFiltrar = document.getElementById("btnFiltrarPeriodo");
-const btnLimpar = document.getElementById("btnLimparPeriodo");
+const contadorPendentes = document.getElementById("contadorPendentes");
+const notificacao = document.getElementById("notificacao");
+
+const exportExcelBtn = document.getElementById("exportExcel");
+const exportPDFBtn = document.getElementById("exportPDF");
 
 let unsubscribe = null;
 let agendamentosCache = [];
-let filtroAtivo = false;
+let primeiroLoad = true;
 
 // =============================
 // 🔐 LOGIN
 // =============================
 btnLogin?.addEventListener("click", async () => {
-
   const email = document.getElementById("email").value.trim();
   const senha = document.getElementById("senha").value.trim();
 
@@ -71,16 +71,12 @@ btnLogin?.addEventListener("click", async () => {
   try {
     await signInWithEmailAndPassword(auth, email, senha);
     erroLogin.textContent = "";
-  } catch (error) {
+  } catch {
     erroLogin.textContent = "Erro ao fazer login.";
   }
 });
 
-// =============================
-// 🔐 SESSÃO
-// =============================
 onAuthStateChanged(auth, (user) => {
-
   if (user) {
     loginBox.style.display = "none";
     painel.style.display = "block";
@@ -90,18 +86,14 @@ onAuthStateChanged(auth, (user) => {
     painel.style.display = "none";
     if (unsubscribe) unsubscribe();
   }
-
 });
 
-// =============================
-// 🚪 LOGOUT
-// =============================
 logoutBtn?.addEventListener("click", async () => {
   await signOut(auth);
 });
 
 // =============================
-// 🔥 LISTENER
+// 🔥 LISTENER COM NOTIFICAÇÃO
 // =============================
 function iniciarListener() {
 
@@ -111,48 +103,29 @@ function iniciarListener() {
 
   unsubscribe = onSnapshot(ref, (snapshot) => {
 
+    if (!primeiroLoad && snapshot.docChanges().some(change => change.type === "added")) {
+      mostrarNotificacao();
+    }
+
+    primeiroLoad = false;
+
     agendamentosCache = snapshot.docs.map(docSnap => ({
       id: docSnap.id,
       ...docSnap.data()
     }));
 
-    aplicarFiltro();
-
+    renderizar(agendamentosCache);
   });
-
 }
 
 // =============================
-// 📅 FILTRO POR PERÍODO
+// 🔔 NOTIFICAÇÃO VISUAL
 // =============================
-btnFiltrar?.addEventListener("click", () => {
-  filtroAtivo = true;
-  aplicarFiltro();
-});
-
-btnLimpar?.addEventListener("click", () => {
-  dataInicio.value = "";
-  dataFim.value = "";
-  filtroAtivo = false;
-  renderizar(agendamentosCache);
-});
-
-function aplicarFiltro() {
-
-  if (!filtroAtivo || !dataInicio.value || !dataFim.value) {
-    renderizar(agendamentosCache);
-    return;
-  }
-
-  const inicio = dataInicio.value;
-  const fim = dataFim.value;
-
-  const filtrados = agendamentosCache.filter(item => {
-    if (!item.data) return false;
-    return item.data >= inicio && item.data <= fim;
-  });
-
-  renderizar(filtrados);
+function mostrarNotificacao() {
+  notificacao.style.display = "block";
+  setTimeout(() => {
+    notificacao.style.display = "none";
+  }, 4000);
 }
 
 // =============================
@@ -164,10 +137,7 @@ function renderizar(lista) {
   confirmadosDiv.innerHTML = "";
   canceladosDiv.innerHTML = "";
 
-  if (!lista.length) {
-    pendentesDiv.innerHTML = "<p>Nenhum agendamento encontrado.</p>";
-    return;
-  }
+  let totalPendentes = 0;
 
   lista
     .sort((a, b) => (a.data || "").localeCompare(b.data || ""))
@@ -178,11 +148,10 @@ function renderizar(lista) {
 
       div.innerHTML = `
         <strong>Cliente:</strong> ${dados.nome ?? "-"}<br>
-        <strong>Contato:</strong> ${dados.contato ?? "-"}<br>
+        <strong>Contato:</strong> ${dados.telefone ?? "-"}<br>
         <strong>Serviço:</strong> ${dados.servico ?? "-"}<br>
         <strong>Data:</strong> ${dados.data ?? "-"}<br>
-        <strong>Horário:</strong> ${dados.horario ?? "-"}<br>
-        <strong>Status:</strong> ${dados.status ?? "pendente"}<br><br>
+        <strong>Horário:</strong> ${dados.horario ?? "-"}<br><br>
 
         <button class="confirmar">Confirmar</button>
         <button class="cancelar">Cancelar</button>
@@ -214,8 +183,68 @@ function renderizar(lista) {
       } else if (status === "cancelado") {
         canceladosDiv.appendChild(div);
       } else {
+        totalPendentes++;
         pendentesDiv.appendChild(div);
       }
-
     });
+
+  contadorPendentes.textContent = totalPendentes;
 }
+
+// =============================
+// 📊 EXPORTAR EXCEL
+// =============================
+exportExcelBtn?.addEventListener("click", () => {
+
+  let csv = "Cliente,Telefone,Servico,Data,Horario,Status\n";
+
+  agendamentosCache.forEach(item => {
+    csv += `${item.nome},${item.telefone},${item.servico},${item.data},${item.horario},${item.status}\n`;
+  });
+
+  const blob = new Blob([csv], { type: "text/csv" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "agendamentos.csv";
+  a.click();
+});
+
+// =============================
+// 🗂 EXPORTAR PDF
+// =============================
+exportPDFBtn?.addEventListener("click", () => {
+
+  let conteudo = `
+    <h2>Relatório de Agendamentos</h2>
+    <table border="1" cellspacing="0" cellpadding="5">
+      <tr>
+        <th>Cliente</th>
+        <th>Telefone</th>
+        <th>Serviço</th>
+        <th>Data</th>
+        <th>Horário</th>
+        <th>Status</th>
+      </tr>
+  `;
+
+  agendamentosCache.forEach(item => {
+    conteudo += `
+      <tr>
+        <td>${item.nome}</td>
+        <td>${item.telefone}</td>
+        <td>${item.servico}</td>
+        <td>${item.data}</td>
+        <td>${item.horario}</td>
+        <td>${item.status}</td>
+      </tr>
+    `;
+  });
+
+  conteudo += "</table>";
+
+  const janela = window.open("", "", "width=900,height=700");
+  janela.document.write(conteudo);
+  janela.print();
+});
