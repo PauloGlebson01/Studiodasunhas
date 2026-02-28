@@ -52,6 +52,11 @@ const notificacao = document.getElementById("notificacao");
 const exportExcelBtn = document.getElementById("exportExcel");
 const exportPDFBtn = document.getElementById("exportPDF");
 
+const dataInicio = document.getElementById("dataInicio");
+const dataFim = document.getElementById("dataFim");
+const btnFiltrarPeriodo = document.getElementById("btnFiltrarPeriodo");
+const btnLimparPeriodo = document.getElementById("btnLimparPeriodo");
+
 let unsubscribe = null;
 let agendamentosCache = [];
 let primeiroLoad = true;
@@ -59,24 +64,28 @@ let primeiroLoad = true;
 // =============================
 // 🔐 LOGIN
 // =============================
-btnLogin?.addEventListener("click", async () => {
-  const email = document.getElementById("email").value.trim();
-  const senha = document.getElementById("senha").value.trim();
+btnLogin?.addEventListener("click", async (e) => {
+  e.preventDefault();
+
+  const email = document.getElementById("email")?.value.trim();
+  const senha = document.getElementById("senha")?.value.trim();
 
   if (!email || !senha) {
-    erroLogin.textContent = "Preencha email e senha.";
+    if (erroLogin) erroLogin.textContent = "Preencha email e senha.";
     return;
   }
 
   try {
     await signInWithEmailAndPassword(auth, email, senha);
-    erroLogin.textContent = "";
+    if (erroLogin) erroLogin.textContent = "";
   } catch {
-    erroLogin.textContent = "Erro ao fazer login.";
+    if (erroLogin) erroLogin.textContent = "Erro ao fazer login.";
   }
 });
 
 onAuthStateChanged(auth, (user) => {
+  if (!loginBox || !painel) return;
+
   if (user) {
     loginBox.style.display = "none";
     painel.style.display = "block";
@@ -93,7 +102,7 @@ logoutBtn?.addEventListener("click", async () => {
 });
 
 // =============================
-// 🔥 LISTENER COM NOTIFICAÇÃO
+// 🔥 LISTENER
 // =============================
 function iniciarListener() {
 
@@ -103,7 +112,8 @@ function iniciarListener() {
 
   unsubscribe = onSnapshot(ref, (snapshot) => {
 
-    if (!primeiroLoad && snapshot.docChanges().some(change => change.type === "added")) {
+    if (!primeiroLoad &&
+        snapshot.docChanges().some(change => change.type === "added")) {
       mostrarNotificacao();
     }
 
@@ -119,10 +129,13 @@ function iniciarListener() {
 }
 
 // =============================
-// 🔔 NOTIFICAÇÃO VISUAL
+// 🔔 NOTIFICAÇÃO
 // =============================
 function mostrarNotificacao() {
+  if (!notificacao) return;
+
   notificacao.style.display = "block";
+
   setTimeout(() => {
     notificacao.style.display = "none";
   }, 4000);
@@ -132,6 +145,8 @@ function mostrarNotificacao() {
 // 🎨 RENDERIZAÇÃO
 // =============================
 function renderizar(lista) {
+
+  if (!pendentesDiv) return;
 
   pendentesDiv.innerHTML = "";
   confirmadosDiv.innerHTML = "";
@@ -158,38 +173,68 @@ function renderizar(lista) {
         <button class="excluir">Excluir</button>
       `;
 
-      div.querySelector(".confirmar").addEventListener("click", async () => {
-        await updateDoc(doc(db, "agendamentos", dados.id), {
-          status: "confirmado"
-        });
-      });
+      div.querySelector(".confirmar").onclick = async () => {
+        await updateDoc(doc(db, "agendamentos", dados.id), { status: "confirmado" });
+      };
 
-      div.querySelector(".cancelar").addEventListener("click", async () => {
-        await updateDoc(doc(db, "agendamentos", dados.id), {
-          status: "cancelado"
-        });
-      });
+      div.querySelector(".cancelar").onclick = async () => {
+        await updateDoc(doc(db, "agendamentos", dados.id), { status: "cancelado" });
+      };
 
-      div.querySelector(".excluir").addEventListener("click", async () => {
+      div.querySelector(".excluir").onclick = async () => {
         if (confirm("Deseja excluir este agendamento?")) {
           await deleteDoc(doc(db, "agendamentos", dados.id));
         }
-      });
+      };
 
       const status = dados.status || "pendente";
 
       if (status === "confirmado") {
-        confirmadosDiv.appendChild(div);
+        confirmadosDiv?.appendChild(div);
       } else if (status === "cancelado") {
-        canceladosDiv.appendChild(div);
+        canceladosDiv?.appendChild(div);
       } else {
         totalPendentes++;
-        pendentesDiv.appendChild(div);
+        pendentesDiv?.appendChild(div);
       }
     });
 
-  contadorPendentes.textContent = totalPendentes;
+  if (contadorPendentes) {
+    contadorPendentes.textContent = totalPendentes;
+  }
 }
+
+// =============================
+// 📅 FILTRO DE PERÍODO
+// =============================
+btnFiltrarPeriodo?.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  if (!dataInicio?.value || !dataFim?.value) {
+    alert("Selecione data inicial e final.");
+    return;
+  }
+
+  const inicio = new Date(dataInicio.value + "T00:00:00");
+  const fim = new Date(dataFim.value + "T23:59:59");
+
+  const filtrados = agendamentosCache.filter(item => {
+    if (!item.data) return false;
+    const dataItem = new Date(item.data + "T12:00:00");
+    return dataItem >= inicio && dataItem <= fim;
+  });
+
+  renderizar(filtrados);
+});
+
+btnLimparPeriodo?.addEventListener("click", (e) => {
+  e.preventDefault();
+
+  if (dataInicio) dataInicio.value = "";
+  if (dataFim) dataFim.value = "";
+
+  renderizar(agendamentosCache);
+});
 
 // =============================
 // 📊 EXPORTAR EXCEL
@@ -199,7 +244,7 @@ exportExcelBtn?.addEventListener("click", () => {
   let csv = "Cliente,Telefone,Servico,Data,Horario,Status\n";
 
   agendamentosCache.forEach(item => {
-    csv += `${item.nome},${item.telefone},${item.servico},${item.data},${item.horario},${item.status}\n`;
+    csv += `${item.nome ?? ""},${item.telefone ?? ""},${item.servico ?? ""},${item.data ?? ""},${item.horario ?? ""},${item.status ?? "pendente"}\n`;
   });
 
   const blob = new Blob([csv], { type: "text/csv" });
@@ -232,12 +277,12 @@ exportPDFBtn?.addEventListener("click", () => {
   agendamentosCache.forEach(item => {
     conteudo += `
       <tr>
-        <td>${item.nome}</td>
-        <td>${item.telefone}</td>
-        <td>${item.servico}</td>
-        <td>${item.data}</td>
-        <td>${item.horario}</td>
-        <td>${item.status}</td>
+        <td>${item.nome ?? ""}</td>
+        <td>${item.telefone ?? ""}</td>
+        <td>${item.servico ?? ""}</td>
+        <td>${item.data ?? ""}</td>
+        <td>${item.horario ?? ""}</td>
+        <td>${item.status ?? "pendente"}</td>
       </tr>
     `;
   });
@@ -246,5 +291,6 @@ exportPDFBtn?.addEventListener("click", () => {
 
   const janela = window.open("", "", "width=900,height=700");
   janela.document.write(conteudo);
+  janela.document.close();
   janela.print();
 });

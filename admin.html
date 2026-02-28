@@ -15,13 +15,18 @@
     <!-- ================= LOGIN ================= -->
     <div id="loginBox" class="login-box">
 
-        <img src="./assets/nails-perfil.jfif" alt="Studio das Unhas" class="logo">
+        <img src="./assets/nails-perfil.jfif" 
+             alt="Studio das Unhas" 
+             class="logo login-logo">
 
         <h2>🔐 Acesso Administrativo</h2>
 
-        <input type="email" id="email" placeholder="E-mail">
-        <input type="password" id="senha" placeholder="Senha">
-        <button id="btnLogin">Entrar</button>
+        <!-- IMPORTANTE: sem form para evitar reload -->
+        <div class="login-campos">
+            <input type="email" id="email" placeholder="E-mail">
+            <input type="password" id="senha" placeholder="Senha">
+            <button type="button" id="btnLogin">Entrar</button>
+        </div>
 
         <p id="loginErro" class="erro"></p>
     </div>
@@ -34,7 +39,10 @@
         <div class="topo-painel">
 
             <div class="info-topo">
-                <img src="./assets/nails-perfil.jfif" alt="Studio das Unhas" class="logo">
+                <img src="./assets/nails-perfil.jfif" 
+                     alt="Studio das Unhas" 
+                     class="logo painel-logo">
+
                 <div>
                     <h1>📋 Painel de Agendamentos</h1>
                     <h2>Studio das Unhas</h2>
@@ -51,23 +59,44 @@
 
             <!-- Ações -->
             <div class="acoes-topo">
-                <button id="exportExcel" class="btn-acao">📊 Exportar Excel</button>
-                <button id="exportPDF" class="btn-acao">🗂 Exportar PDF</button>
-                <button id="logout" class="logout-btn">Sair</button>
+                <button type="button" id="exportExcel" class="btn-acao">
+                    📊 Exportar Excel
+                </button>
+
+                <button type="button" id="exportPDF" class="btn-acao">
+                    🗂 Exportar PDF
+                </button>
+
+                <button type="button" id="logout" class="logout-btn">
+                    Sair
+                </button>
             </div>
 
         </div>
 
         <!-- ================= FILTRO ================= -->
         <div class="filtro-periodo">
-            <label>📅 Filtrar por período:</label>
 
-            <input type="date" id="dataInicio">
-            <span>até</span>
-            <input type="date" id="dataFim">
+            <label class="label-filtro">
+                📅 Filtrar por período:
+            </label>
 
-            <button id="btnFiltrarPeriodo">Filtrar</button>
-            <button id="btnLimparPeriodo">Limpar</button>
+            <div class="inputs-filtro">
+                <input type="date" id="dataInicio">
+                <span class="ate">até</span>
+                <input type="date" id="dataFim">
+            </div>
+
+            <div class="botoes-filtro">
+                <button type="button" id="btnFiltrarPeriodo" class="btn-filtro">
+                    Filtrar
+                </button>
+
+                <button type="button" id="btnLimparPeriodo" class="btn-limpar">
+                    Limpar
+                </button>
+            </div>
+
         </div>
 
         <!-- 🔔 NOTIFICAÇÃO -->
@@ -98,9 +127,8 @@
 
     </div>
 
-    <!-- SCRIPT -->
+    <!-- SCRIPT (no final do body) -->
     <script type="module" src="admin.js"></script>
 
 </body>
-
 </html>
